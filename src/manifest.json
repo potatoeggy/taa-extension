@@ -1,0 +1,10 @@
+{
+	"name": "TeachAssistAssist",
+	"description": "View statistics by anonymously aggregating marks",
+	"version": "0.1",
+	"manifest_version": 3,
+	"background": {
+		"service_worker": "js/background.js"
+	},
+	"permissions": ["storage"]
+}	
