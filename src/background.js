@@ -1,5 +1,5 @@
-const deleteUrl = 'http://9556f8990086.ngrok.io/delete'
-const pushUrl = 'http://6b04e3e4c301.ngrok.io/send'
+const DELETE_URL = 'https://eggworld.tk/delete'
+const PUSH_URL = 'https://eggworld.tk/send'
 
 function post(url, json) {
     fetch(url, {
@@ -15,7 +15,7 @@ function syncData(deleteData) {
     console.log('syncing with delete: ' + deleteData)
     chrome.storage.local.get('data', (result) => {
         if (!result.data) return
-        post((deleteData ? deleteUrl : pushUrl), result.data)
+        post((deleteData ? DELETE_URL : PUSH_URL), result.data)
         chrome.storage.sync.set({ lastSynced: new Date().toLocaleString() })
         chrome.storage.local.set({'data' : null})
     })

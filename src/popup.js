@@ -1,3 +1,6 @@
+const USER_URL = 'https://eggworld.tk/user/'
+const HOME_URL = 'https://eggworld.tk'
+
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     const url = tabs[0].url
     if (url.startsWith('https://ta.yrdsb.ca/live/students/viewReport.php?')) {
@@ -57,11 +60,11 @@ function gotoStats() {
             sha256(studentId).then(
                 (hashedId) => {
                     // load user page
-                    chrome.tabs.create({ url: `https://eggworld.tk/user/${hashedId}` })
+                    chrome.tabs.create({ url: `${USER_URL}${hashedId}` })
                 }
             ).catch((err) => {
                 // redirect to home page
-                chrome.tabs.create({ url: 'https://eggworld.tk'})
+                chrome.tabs.create({ url: HOME_URL})
             })
         }
     })
