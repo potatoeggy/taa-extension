@@ -56,10 +56,11 @@ function gotoStats() {
         if (studentId != null) {
             sha256(studentId).then(
                 (hashedId) => {
+                    // load user page
                     chrome.tabs.create({ url: `https://eggworld.tk/user/${hashedId}` })
                 }
-            ).catch(
-                (err) => {
+            ).catch((err) => {
+                // redirect to home page
                 chrome.tabs.create({ url: 'https://eggworld.tk'})
             })
         }
