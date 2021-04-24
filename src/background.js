@@ -1,5 +1,5 @@
-const DELETE_URL = 'https://eggworld.tk/delete'
-const PUSH_URL = 'https://eggworld.tk/send'
+const DELETE_URL = 'http://127.0.0.1:8000/delete'
+const PUSH_URL = 'http://127.0.0.1:8000/send'
 
 function post(url, json) {
     fetch(url, {

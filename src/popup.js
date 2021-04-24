@@ -1,5 +1,5 @@
-const USER_URL = 'https://eggworld.tk/user/'
-const HOME_URL = 'https://eggworld.tk'
+const USER_URL = 'http://127.0.0.1:8000/user/'
+const HOME_URL = 'http://127.0.0.1:8000'
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     const url = tabs[0].url
