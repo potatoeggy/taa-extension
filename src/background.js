@@ -1,5 +1,3 @@
-// todo: if button is pressed call sync function
-
 const deleteUrl = 'http://9556f8990086.ngrok.io/delete'
 const pushUrl = 'http://6b04e3e4c301.ngrok.io/send'
 
