@@ -1,0 +1,24 @@
+#content {
+    width: 300px;
+    height: 220px;
+    margin: auto;
+    padding: 20px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#delete-button {
+    --mdc-theme-primary: #FF0000;
+}
+
+#view-button {
+    --mdc-theme-primary: #1E90FF;
+}
+
+.red {
+    --mdc-theme-primary: #FF0000;
+}

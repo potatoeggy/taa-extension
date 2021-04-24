@@ -36,7 +36,7 @@ function parseScores(string) {
 }
 
 // parse url and get student id
-function parseStudentId() {
+async function parseStudentId() {
     const query = window.location.search.substring(1)
     var studentId = null
 
@@ -48,20 +48,17 @@ function parseStudentId() {
             break
         }
     }
-    
+
     // no student id found
     if (studentId == null) {
-        return false
+        return null
     }
 
     // hash it
-    return (async () => {
-        return await sha256(studentId)
-    })().catch(e => {
-        return false
-    })
+    return sha256(studentId)
 }
 
+// TODO: this is not returning expected values
 async function sha256(string) {
     // encode as utf-8
     const msgBuffer = new TextEncoder('utf-8').encode(string)
@@ -73,24 +70,17 @@ async function sha256(string) {
     const hashArray = Array.from(new Uint8Array(hashBuffer))
 
     // byte array to hex string
-    const hashHex = hashArray.map(byte => (
-        ('00' + byte.toString(16))
-            .slice(-2)
-            .join('')
-    ))
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
     return hashHex
 }
 
-// if we didn't 403 or permission denied
-if (document.title.includes('Student Report')) {
+function main(studentId) {
+    // if null
+    if (!studentId) return
+
     const json = {}
-    
-    json['student_id'] = parseStudentId()
-    
-    // if student id not found
-    if (!json['student_id']) {
-        return
-    }
+    json['student_id'] = studentId
 
     // prefer course mark over term mark
     const current_mark = document.querySelector(SELECTORS.COURSE_MARK) || document.querySelector(SELECTORS.CURRENT_MARK)
@@ -139,5 +129,16 @@ if (document.title.includes('Student Report')) {
     console.log(json)
 
     // send completed json to backend
-    chrome.runtime.sendMessage({taReady: true, json: json})
+    if (json['student_id']) {
+        chrome.runtime.sendMessage({taReady: true, json: json})
+    }
+}
+
+// if we didn't 403 or permission denied
+if (document.title.includes('Student Report')) {
+    parseStudentId().then(
+        (studentId) => { main(studentId) }
+    ).catch(
+        (err) => { console.log(err) }
+    )
 }

@@ -1,10 +1,65 @@
+<!doctype html>
 <html>
     <head>
         <link rel="stylesheet" href="popup.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://unpkg.com/material-components-web@11.0.0/dist/material-components-web.min.css">
+        <script src="https://unpkg.com/material-components-web@11.0.0/dist/material-components-web.min.js"></script>
+        <script src="popup.js"></script>
+        <title>TAA Extension</title>
     </head>
     <body>
-        <p>go to teachassist</p>
-        <button>Hello!</button>
-        <script src="popup.js"></script>
+        <div id="content">
+            <div id="sync-div" class="center">
+                <button id="sync-button" class="mdc-button mdc-button--raised" data-mdc-auto-init="MDCButton" disabled>
+                    <span class="mdc-button__ripple"></span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">sync</i>
+                    <span id="sync-button-text" class="mdc-button__label">Sync now</span>
+                </button>
+            </div>
+            <p></p>
+
+            <div id="delete-div" class="center">
+                <button id="delete-button" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCButton" disabled>
+                    <span class="mdc-button__ripple"></span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">delete_outline</i>
+                    <span class="mdc-button__label">Delete my data</span>
+                </button>
+            </div>
+            <p></p>
+
+            <div id="delete-div" class="center">
+                <button id="view-button" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCButton" disabled>
+                    <span class="mdc-button__ripple"></span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">list</i>
+                    <span class="mdc-button__label">View my stats</span>
+                </button>
+            </div>
+
+            <span id="go-to-ta" class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+                <i style="color: red" class="material-icons mdc-button__icon" aria-hidden="true">info_outline</i>
+                <p style="color: red">
+                    Visit a <a href="https://ta.yrdsb.ca" target="_blank">TeachAssist subject page</a> to manage your data.
+                </p>
+            </span>
+            
+            <div class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+                <div class="mdc-checkbox" data-mdc-auto-init="MDCCheckbox">
+                    <input type="checkbox" class="mdc-checkbox__native-control" id="autosync-box"/>
+                    <div class="mdc-checkbox__background">
+                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                            <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                        </svg>
+                        <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                    <div class="mdc-checkbox__ripple"></div>
+                </div>
+                <label for="autosync-box">Automatically sync in the background</label>
+            </div>
+
+            <span class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+                <p><b>Last synced:</b> <span id="last-synced">never</span></p>
+            </span>
+        </div>
     </body>
 </html>

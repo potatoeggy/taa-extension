@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener(
     function(requester, sender) {
         if (sender.tab && requester.taReady) { // if from a content script
             // post to server
-            fetch('http:///send', {
+            fetch('http://0c8b7eb06bf4.ngrok.io/delete', {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(requester.json)
