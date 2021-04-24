@@ -5,7 +5,6 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://unpkg.com/material-components-web@11.0.0/dist/material-components-web.min.css">
         <script src="https://unpkg.com/material-components-web@11.0.0/dist/material-components-web.min.js"></script>
-        <script src="popup.js"></script>
         <title>TAA Extension</title>
     </head>
     <body>
@@ -23,12 +22,12 @@
                 <button id="delete-button" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCButton" disabled>
                     <span class="mdc-button__ripple"></span>
                     <i class="material-icons mdc-button__icon" aria-hidden="true">delete_outline</i>
-                    <span class="mdc-button__label">Delete my data</span>
+                    <span class="mdc-button__label">Delete synced data</span>
                 </button>
             </div>
             <p></p>
 
-            <div id="delete-div" class="center">
+            <div id="view-div" class="center">
                 <button id="view-button" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCButton" disabled>
                     <span class="mdc-button__ripple"></span>
                     <i class="material-icons mdc-button__icon" aria-hidden="true">list</i>
@@ -61,5 +60,6 @@
                 <p><b>Last synced:</b> <span id="last-synced">never</span></p>
             </span>
         </div>
+        <script src="popup.js"></script>
     </body>
 </html>

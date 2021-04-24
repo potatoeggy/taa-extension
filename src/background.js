@@ -1,10 +1,6 @@
-// todo: instead of posting save json to localstorage
-// todo: if global variable autosync is enabled immediately call sync function
 // todo: if button is pressed call sync function
-// todo: add support for student id
-// todo: replace file with proper ta
 
-const deleteUrl = 'http://6b04e3e4c301.ngrok.io/delete'
+const deleteUrl = 'http://9556f8990086.ngrok.io/delete'
 const pushUrl = 'http://6b04e3e4c301.ngrok.io/send'
 
 function post(url, json) {
@@ -17,16 +13,35 @@ function post(url, json) {
     })
 }
 
+function syncData(deleteData) {
+    console.log('syncing with delete: ' + deleteData)
+    chrome.storage.local.get('data', (result) => {
+        if (!result.data) return
+        post((deleteData ? deleteUrl : pushUrl), result.data)
+    })
+}
+
 // receive data from TA content script
 chrome.runtime.onMessage.addListener(
     function(requester, sender) {
-        if (sender.tab && requester.taReady) { // if from a content script
-            // check for localstorage
-            post(deleteUrl, requester.json)
-        }
+        if (sender.tab && requester.taReady && requester.json) { // if from a content script
+            // put data in storage regardless
+            chrome.storage.local.set({data: requester.json})
 
-        if (requester.deleteData) {
-
+            // if autosync is enabled fire it off
+            chrome.storage.sync.get('autosync', function (result) {
+                if (result.autosync) {
+                    syncData(false)
+                }
+            })
+        } else if (requester.syncNow) {
+            syncData(false)
+        } else if (requester.deleteData) {
+            syncData(true)
+        } else if (requester.setAutosync) {
+            chrome.storage.sync.set({autosync: requester.autosync})
+        } else if (requester.lastSynced) {
+            chrome.storage.sync.set({lastSynced: requester.lastSynced})
         }
     }
 )
