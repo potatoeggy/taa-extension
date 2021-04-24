@@ -35,12 +35,68 @@ function parseScores(string) {
     }
 }
 
+// parse url and get student id
+function parseStudentId() {
+    const query = window.location.search.substring(1)
+    var studentId = null
+
+    // parse it from the URI
+    for (p of query.split('&')) {
+        const pair = p.split('=')
+        if (decodeURIComponent(pair[0]) == 'student_id') {
+            studentId = decodeURIComponent(pair[1])
+            break
+        }
+    }
+    
+    // no student id found
+    if (studentId == null) {
+        return false
+    }
+
+    // hash it
+    studentId = (async () => {
+        hashedId = await sha256(studentId)
+        console.log(hashedId)
+        return hashedId
+    })().catch(e => {
+        console.log('shasuming failed')
+    })
+}
+
+async function sha256(string) {
+    // encode as utf-8
+    const msgBuffer = new TextEncoder('utf-8').encode(string)
+
+    // hash it
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgBuffer)
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+
+    // byte array to hex string
+    const hashHex = hashArray.map(byte => (
+        ('00' + byte.toString(16))
+            .slice(-2)
+            .join('')
+    ))
+    return hashHex
+}
+
 // if we didn't 403 or permission denied
 if (document.title.includes('Student Report')) {
     const json = {}
     
+    json['student_id'] = parseStudentId()
+    
+    // if student id not found
+    if (!json['student_id']) {
+        return
+    }
+
     // prefer course mark over term mark
     const current_mark = document.querySelector(SELECTORS.COURSE_MARK) || document.querySelector(SELECTORS.CURRENT_MARK)
+    
     // Use decimal representations of percentages
     json['current_mark'] = parseFloat(current_mark?.textContent) / 100 || null
 
@@ -76,13 +132,12 @@ if (document.title.includes('Student Report')) {
         assFormatted['name'] = ass[0]
         for (let i = 1; i < ass.length; i++) {
             assScore = parseScores(ass[i])
-            assFormatted[indexToKey[i]] = assScore.mark != null ? [assScore.mark, assScore.total] : null
+            assFormatted[indexToKey[i]] = assScore.total != null ? [assScore.mark, assScore.total] : null
             assFormatted[`${indexToKey[i]}_weight`] = assScore.weight
         }
         assFinal.push(assFormatted)
     }
     json['assignments'] = assFinal
-    json['student_id'] = 123456
     console.log(json)
 
     // send completed json to backend

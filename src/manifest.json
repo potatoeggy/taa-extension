@@ -8,10 +8,9 @@
 	},
 	"content_scripts": [
 		{
-			"pommematches": [
+			"matches": [
 				"*://ta.yrdsb.ca/live/students/viewReport.php?*"
 			],
-			"matches": ["file://*"],
 			"js": ["js/ta.js"]
 		}
 	],
