@@ -18,6 +18,8 @@ function syncData(deleteData) {
     chrome.storage.local.get('data', (result) => {
         if (!result.data) return
         post((deleteData ? deleteUrl : pushUrl), result.data)
+        chrome.storage.sync.set({ lastSynced: new Date().toLocaleString() })
+        chrome.storage.local.set({'data' : null})
     })
 }
 
