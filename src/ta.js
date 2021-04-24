@@ -55,12 +55,10 @@ function parseStudentId() {
     }
 
     // hash it
-    studentId = (async () => {
-        hashedId = await sha256(studentId)
-        console.log(hashedId)
-        return hashedId
+    return (async () => {
+        return await sha256(studentId)
     })().catch(e => {
-        console.log('shasuming failed')
+        return false
     })
 }
 
