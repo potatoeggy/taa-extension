@@ -1,9 +1,13 @@
 // hardcoded xpaths are the simplest option
 // if ta updates their layout any scraping form would break anyway
 const XPATHS = {
-    CURRENT_MARK: '/html/body/div/div[3]/div/table[1]/tbody/tr/td[1]/div',
     COURSE_CODE: '/html/body/div/div[1]/div/div/h2',
-    ASSIGNMENTS_TABLE: '/html/body/div/div[2]/div/div/table[1]'
+}
+
+const SELECTORS = {
+    CURRENT_MARK: 'div[style="font-family:\'Alfa Slab One\', Arial, serif;font-weight:400;font-size:64pt;color:#eeeeee;"]',
+    COURSE_MARK: 'div[style="font-family:\'Alfa Slab One\', Arial, serif;font-weight:400;font-size:64pt;color:#000000;"]',
+    ASSIGNMENTS_TABLE: 'table[width="100%"]'
 }
 
 // for convenience and friendlier names
@@ -23,11 +27,11 @@ function getElementByXpath(path) {
 
 // convert the odd TA string to a simpler object
 function parseScores(string) {
-    const scores = string.replace(/[^0-9% ]/g, '').split('  ')
+    const scores = string.replace(/[^0-9\.% ]/g, '').split('  ')
     return {
         mark: parseFloat(scores[0]) || null,
         total: parseFloat(scores[1]) || null,
-        weight: parseFloat((scores[2] || '').split('%')[2]) || null
+        weight: parseFloat((scores[2] || '').split('%')[1]) || null
     }
 }
 
@@ -35,13 +39,15 @@ function parseScores(string) {
 if (document.title.includes('Student Report')) {
     const json = {}
     
+    // prefer course mark over term mark
+    const current_mark = document.querySelector(SELECTORS.COURSE_MARK) || document.querySelector(SELECTORS.CURRENT_MARK)
     // Use decimal representations of percentages
-    json['current_mark'] = parseFloat(getElementByXpath(XPATHS.CURRENT_MARK).textContent) / 100
+    json['current_mark'] = parseFloat(current_mark?.textContent) / 100 || null
 
     json['course_code'] = getElementByXpath(XPATHS.COURSE_CODE).textContent
     
     // get an array 
-    const rowsDom = getElementByXpath(XPATHS.ASSIGNMENTS_TABLE).getElementsByTagName('TR')
+    const rowsDom = document.querySelector(SELECTORS.ASSIGNMENTS_TABLE).getElementsByTagName('TR')
     const assTable = []
     for (let i = 0; i < rowsDom.length; i++) {
         // there are smaller tables that contain only one mark and
@@ -61,7 +67,6 @@ if (document.title.includes('Student Report')) {
     for (let i = 0; i < titleRow.length; i++) {
         indexToKey[i] = HEADER_TO_KEY[titleRow[i]] 
     }
-    console.log(assTable)
     
     // build final json assignment key
     const assFinal = []
@@ -77,6 +82,8 @@ if (document.title.includes('Student Report')) {
         assFinal.push(assFormatted)
     }
     json['assignments'] = assFinal
+    json['student_id'] = 123456
+    console.log(json)
 
     // send completed json to backend
     chrome.runtime.sendMessage({taReady: true, json: json})
