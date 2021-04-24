@@ -4,18 +4,29 @@
 // todo: add support for student id
 // todo: replace file with proper ta
 
+const deleteUrl = 'http://6b04e3e4c301.ngrok.io/delete'
+const pushUrl = 'http://6b04e3e4c301.ngrok.io/send'
+
+function post(url, json) {
+    fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(json)
+    }).then(response => {
+        console.log('Request complete with response:', response)
+    })
+}
+
 // receive data from TA content script
 chrome.runtime.onMessage.addListener(
     function(requester, sender) {
         if (sender.tab && requester.taReady) { // if from a content script
-            // post to server
-            fetch('http://0c8b7eb06bf4.ngrok.io/delete', {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(requester.json)
-            }).then(response => {
-                console.log('Request complete with response:', response)
-            })
+            // check for localstorage
+            post(deleteUrl, requester.json)
+        }
+
+        if (requester.deleteData) {
+
         }
     }
 )

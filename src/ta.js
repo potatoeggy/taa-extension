@@ -58,7 +58,6 @@ async function parseStudentId() {
     return sha256(studentId)
 }
 
-// TODO: this is not returning expected values
 async function sha256(string) {
     // encode as utf-8
     const msgBuffer = new TextEncoder('utf-8').encode(string)
